@@ -1,31 +1,31 @@
 using System.Diagnostics;
+using Honeycomb.OpenTelemetry;
 using OpenTelemetry;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
+var appBuilder = WebApplication.CreateBuilder(args);
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddOpenTelemetryTracing(builder => 
+appBuilder.Services.AddOpenTelemetryTracing(builder => 
     builder.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("OpenTelemetry Demo (Product API)"))
-           .AddSource("OpenTelemetry.Demo.ProductAPI")
            .AddAspNetCoreInstrumentation()
-           .AddJaegerExporter());
+           .AddJaegerExporter()
+           .AddHoneycomb(o => {
+               o.ApiKey = appBuilder.Configuration["HoneycombSettings:ApiKey"];
+               o.ServiceName = "Product Service";
+           }));
 
+var app = appBuilder.Build();
 
-var app = builder.Build();
-
-
-ActivitySource source = new ActivitySource("OpenTelemetry.Demo.ProductAPI");
-
-app.MapGet("/", async (ctx) => {
+app.MapGet("/productinfo/{id}", async (int id, HttpContext ctx) => {
     await Task.Delay(500);
 
-    var accountId = Baggage.GetBaggage("AccountId");
-    Activity.Current?.SetTag("AccountId", accountId);
+    var accountId = Baggage.GetBaggage("account_id");
+    Activity.Current?.SetTag("account_id", accountId);
+    Activity.Current?.SetTag("product_id", id);
 
     await ctx.Response.WriteAsJsonAsync(new {
-        productId = "123",
+        productId = id,
         productName = "Widgets"
     });
 });

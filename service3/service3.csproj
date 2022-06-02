@@ -4,18 +4,14 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>service1</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Honeycomb.OpenTelemetry" Version="0.21.0-beta" />
+    <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.3.0-beta.2" />
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.0.0-rc9.3" />
     <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc9.3" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc9.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-    <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.1.0" />
-  </ItemGroup>
 </Project>
